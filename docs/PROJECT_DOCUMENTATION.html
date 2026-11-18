@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CorpLab Nexus | Official Project Documentation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --primary-subtle: #eff6ff;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --border-color: #cbd5e1;
+            --border-subtle: #e2e8f0;
+            --bg-page: #f8fafc;
+            --bg-card: #ffffff;
+            --success-badge: #059669;
+            --warning-badge: #d97706;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: var(--text-main);
+            background-color: var(--bg-page);
+            line-height: 1.65;
+            padding: 40px 20px;
+        }
+
+        .document-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            padding: 60px 70px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        /* Print button bar */
+        .action-bar {
+            max-width: 900px;
+            margin: 0 auto 20px auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-print {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 6px rgba(30, 58, 138, 0.25);
+            transition: all 0.2s ease;
+        }
+
+        .btn-print:hover {
+            background-color: var(--primary-light);
+        }
+
+        .doc-meta-banner {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* Typography */
+        h1.project-title {
+            font-size: 30px;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+        }
+
+        h2.project-subtitle {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            background-color: var(--primary-subtle);
+            border-left: 4px solid var(--primary);
+            padding: 16px 20px;
+            border-radius: 4px;
+            margin-bottom: 35px;
+            font-size: 14px;
+        }
+
+        .meta-item strong {
+            color: var(--primary);
+        }
+
+        h2.section-heading {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0f172a;
+            border-bottom: 2px solid var(--border-subtle);
+            padding-bottom: 8px;
+            margin-top: 36px;
+            margin-bottom: 16px;
+        }
+
+        h3.sub-heading {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 14.5px;
+            margin-bottom: 14px;
+            color: #334155;
+            text-align: justify;
+        }
+
+        ul, ol {
+            margin-left: 24px;
+            margin-bottom: 16px;
+            font-size: 14.5px;
+            color: #334155;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0 24px 0;
+            font-size: 13.5px;
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 10px 14px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            color: #0f172a;
+            font-weight: 700;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11.5px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-done {
+            background-color: #dcfce7;
+            color: #15803d;
+        }
+
+        .badge-pending {
+            background-color: #fef3c7;
+            color: #b45309;
+        }
+
+        .badge-code {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: #f1f5f9;
+            color: #0f172a;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12.5px;
+        }
+
+        /* ASCII Tree & Code Blocks */
+        pre.tree-block {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: #0f172a;
+            color: #e2e8f0;
+            padding: 18px 22px;
+            border-radius: 6px;
+            font-size: 12.5px;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin: 16px 0 24px 0;
+        }
+
+        /* Callout Box */
+        .callout-box {
+            background-color: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--primary-light);
+            padding: 16px 20px;
+            border-radius: 4px;
+            margin: 20px 0;
+            font-size: 14px;
+            color: #334155;
+        }
+
+        /* Print Media Styles */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .action-bar {
+                display: none;
+            }
+
+            .document-wrapper {
+                box-shadow: none;
+                border: none;
+                padding: 0;
+                max-width: 100%;
+            }
+
+            h2.section-heading {
+                page-break-after: avoid;
+            }
+
+            table {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="action-bar">
+        <div class="doc-meta-banner">
+            Academic Project Documentation &bull; Bachelor of Computer Applications (BCA) &bull; Academic Year 2026
+        </div>
+        <button class="btn-print" onclick="window.print()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                <rect x="6" y="14" width="12" height="8"></rect>
+            </svg>
+            Print / Save to PDF
+        </button>
+    </div>
+
+    <div class="document-wrapper">
+
+        <h1 class="project-title">CorpLab Nexus</h1>
+        <h2 class="project-subtitle">Corporate Training Resource & Lab Infrastructure Management Platform</h2>
+
+        <div class="meta-grid">
+            <div class="meta-item"><strong>Document:</strong> Official Project Documentation & Report</div>
+            <div class="meta-item"><strong>Degree / Program:</strong> Bachelor of Computer Applications (BCA)</div>
+            <div class="meta-item"><strong>Stage:</strong> Frontend Operational Prototype & Database</div>
+            <div class="meta-item"><strong>Academic Date:</strong> 3 November 2026</div>
+        </div>
+
+        <h2 class="section-heading">1. Executive Summary</h2>
+        <p>
+            <strong>CorpLab Nexus</strong> is an enterprise management platform designed to unify corporate training curriculum, learning materials, daily classroom schedules, physical and virtual compute lab facilities, hardware reservations, and department attendance compliance into one centralized workspace.
+        </p>
+        <p>
+            In contemporary technology organizations, training engineering personnel across specialized tracks—such as Cloud Architecture, Kubernetes Administration, Deep Learning, and Cybersecurity—requires coordinated access to both structured technical materials and high-performance physical or virtual compute nodes. Prior to this platform, such activities suffered from fragmented administration: curriculum documents were scattered across disconnected directories and email threads, while expensive compute hardware experienced scheduling collisions and uncoordinated downtime.
+        </p>
+        <p>
+            The current implementation achieves two major developmental milestones:
+        </p>
+        <ol>
+            <li><strong>Interactive Frontend Portal:</strong> A fully functional, responsive, browser-based management console built with HTML5, modern CSS3, and Vanilla JavaScript. It delivers role-specific perspectives for Trainees, Instructors, and Lab Administrators, featuring real-time compute node status telemetry, hardware RAM allocation bars, simulated SSH diagnostic terminals, curriculum repositories, daily classroom session schedules, multi-criteria filtering, and a conflict-free lab reservation workflow.</li>
+            <li><strong>Relational Database Architecture:</strong> An enterprise MySQL 8.0 database named <span class="badge-code">corporate_training_lab_db</span>, deployed and verified on XAMPP with 10 normalized Third Normal Form (3NF) tables. The database features strict primary and foreign keys (<span class="badge-code">ON DELETE RESTRICT</span>), unique indexes, and authentic 60-character Spring Security BCrypt password hashes, seeded with realistic 2026 operational data.</li>
+        </ol>
+        <p>
+            Currently, the frontend prototype operates in client-side demonstration mode, mirroring the 10 database tables with structured demonstration records. This enables full stakeholder evaluation of workflows and user interface ergonomics prior to connecting the forthcoming Java Spring Boot REST API microservice in Phase 2.
+        </p>
+
+        <h2 class="section-heading">2. Introduction</h2>
+        <p>
+            Modern technology-driven organizations rely heavily on rapid continuous upskilling. However, managing enterprise-scale workforce upskilling involves complex logistics spanning educational content distribution, classroom schedule coordination, and physical infrastructure management.
+        </p>
+
+        <h3 class="sub-heading">2.1 Problem Statement</h3>
+        <p>
+            In the absence of a unified corporate training and lab resource management system, enterprises encounter critical operational bottlenecks:
+        </p>
+        <ul>
+            <li><strong>Curriculum & Schedule Fragmentation:</strong> Training tracks, syllabi, classroom venues, and downloadable laboratory manuals are distributed across disparate communication channels, resulting in version discrepancies and missed sessions.</li>
+            <li><strong>Compute Infrastructure Contention:</strong> Expensive, high-performance compute nodes (such as multi-GPU AI servers, Linux container nodes, and developer workstations) are uncoordinated. Trainees and trainers frequently suffer from schedule collisions, overlapping slot bookings, and unannounced maintenance windows.</li>
+            <li><strong>Lack of Auditability & Compliance:</strong> Tracking trainee attendance, course progress, and administrative booking approvals manually on spreadsheets results in lost audit trails and inaccurate departmental training records.</li>
+        </ul>
+
+        <h3 class="sub-heading">2.2 Proposed Solution</h3>
+        <p>
+            <strong>CorpLab Nexus</strong> solves these challenges by establishing an integrated, three-tier enterprise web portal that centralizes both instructional resources and physical lab compute nodes. The system provides:
+        </p>
+        <ul>
+            <li>An executive console with role-specific views for <strong>Trainees</strong>, <strong>Trainers</strong>, and <strong>Lab Administrators</strong>.</li>
+            <li>Real-time hardware telemetry and status monitoring for all compute machines across physical corporate lab venues.</li>
+            <li>An interactive, conflict-free reservation engine allowing users to request and verify compute capacity without double-booking.</li>
+            <li>A centralized curriculum repository linking training courses with daily session timetables and downloadable technical guides.</li>
+            <li>Departmental attendance and infrastructure utilization analytics for organizational management.</li>
+        </ul>
+
+        <h2 class="section-heading">3. Project Objectives</h2>
+        <ol>
+            <li><strong>Centralize Corporate Training Administration:</strong> Consolidate training programs, syllabi, trainer allocations, and technical course materials into an accessible catalog.</li>
+            <li><strong>Optimize Lab Infrastructure Allocation:</strong> Provide visibility into physical and virtual compute machines, displaying operating systems, IP addresses, vCPU cores, and dynamic RAM utilization meters.</li>
+            <li><strong>Prevent Resource Scheduling Collisions:</strong> Formulate an intuitive reservation workflow allowing authorized personnel to schedule machine time slots without overlapping conflicts.</li>
+            <li><strong>Deliver Distinct Role-Based Experiences:</strong> Provide tailored interfaces for Trainees (curriculum and bookings), Trainers (schedules and materials), and Administrators (infrastructure health and booking approvals).</li>
+            <li><strong>Enforce Database Normalization & Security:</strong> Implement a robust 10-table relational schema normalized to Third Normal Form (3NF), enforcing referential integrity and industry-standard BCrypt password hashing.</li>
+            <li><strong>Establish an Extensible 3-Tier Foundation:</strong> Structure the codebase cleanly to support immediate frontend prototyping and seamless migration to a Java Spring Boot middle tier.</li>
+        </ol>
+
+        <h2 class="section-heading">4. Work Completed So Far</h2>
+
+        <h3 class="sub-heading">4.1 Executive Dashboard & Global Navigation</h3>
+        <p>
+            The primary interface features a modern dark-slate corporate header and navigation sidebar:
+        </p>
+        <ul>
+            <li><strong>Global Header:</strong> Displays the enterprise brand (<span class="badge-code">CorpLab Nexus</span>), active platform breadcrumb, live system clock, environment status indicator, and an interactive Role Switcher dropdown.</li>
+            <li><strong>Quick Metric Cards:</strong> Four top-level metric counters summarize key operational indicators: Total Machines (14), Available Nodes (6), Active Trainees (20), and Course Materials (10).</li>
+            <li><strong>Sidebar Utilization Widget:</strong> An aggregate cluster utilization gauge tracks total allocated memory (768 / 1152 GB RAM, 68%) and processor allocation across all data center zones.</li>
+        </ul>
+
+        <h3 class="sub-heading">4.2 Compute Nodes Management & Telemetry</h3>
+        <p>
+            The core infrastructure view provides a detailed operational inventory of all 14 corporate compute nodes across three facilities:
+        </p>
+        <ul>
+            <li><strong>Hardware Telemetry:</strong> Displays node identifiers (<span class="badge-code">SRV-K8S-M01</span>, <span class="badge-code">GPU-AI-NODE01</span>), operating system tags (Ubuntu 22.04 LTS, Rocky Linux 9.3, Windows Server 2022), static IP addresses, vCPU core counts, and dynamic RAM usage bars.</li>
+            <li><strong>Status Badging:</strong> Visual color-coded indicators highlight nodes as Available (green), Maintenance (amber), or Retired (red).</li>
+            <li><strong>Multi-Criteria Filtering & Search:</strong> Instant browser-side filtering by operational status and lab venue, supported by a real-time keyword search bar.</li>
+            <li><strong>View Modes:</strong> Instant toggle between a visual Card Grid layout and a dense, tabular Enterprise Data Grid.</li>
+            <li><strong>Interactive SSH Diagnostic Simulator:</strong> Clicking the <strong>SSH</strong> diagnostic button opens an authentic terminal overlay simulating an SSH handshake, displaying target IP resolution, RSA key fingerprint verification, and live CPU load diagnostics.</li>
+        </ul>
+
+        <h3 class="sub-heading">4.3 Lab Facilities Management</h3>
+        <p>
+            A dedicated physical venue catalog models the enterprise's three primary technical centers:
+        </p>
+        <ul>
+            <li><strong>Cloud Lab A</strong> (Tech Tower B, Floor 4): Configured for cloud orchestration, holding 25 physical workstations and 5 dedicated server rack units.</li>
+            <li><strong>AI Research Lab</strong> (Innovation Hub, Room 302): High-density GPU research lab with 15 specialized machine learning workstations and dedicated cooling.</li>
+            <li><strong>Dev Lab B</strong> (Engineering Wing, Floor 2): General software engineering laboratory holding 30 developer terminals.</li>
+        </ul>
+
+        <h3 class="sub-heading">4.4 Course Curriculum & Technical Resources</h3>
+        <p>
+            The training module manages 8 corporate learning tracks (including Kubernetes Container Orchestration, Deep Learning with PyTorch, Zero Trust Cyber Defense, and Enterprise Spring Boot 3):
+        </p>
+        <ul>
+            <li>Displays assigned trainers, scheduled dates, course status badges (<span class="badge-code">ONGOING</span>, <span class="badge-code">OPEN</span>, <span class="badge-code">COMPLETED</span>), and enrolled batch capacities.</li>
+            <li>Houses an integrated repository of technical resources, providing downloadable laboratory manuals (PDFs), Jupyter notebook exercises, and Git repository references.</li>
+        </ul>
+
+        <h3 class="sub-heading">4.5 Training Sessions Daily Schedule</h3>
+        <p>
+            A comprehensive calendar schedule displays 27 classroom and laboratory training sessions scheduled across Q4 2026. Each session record maps the parent course track, session topic, assigned trainer, room venue, and precise 24-hour time slots (e.g., 09:00:00 to 13:00:00).
+        </p>
+
+        <h3 class="sub-heading">4.6 Lab Reservations & Booking Workflow</h3>
+        <p>
+            The reservation module provides visibility into 22 compute node booking records tracking through standard enterprise lifecycle states: <span class="badge-code">APPROVED</span>, <span class="badge-code">PENDING</span>, <span class="badge-code">REJECTED</span>, <span class="badge-code">CANCELLED</span>, and <span class="badge-code">COMPLETED</span>:
+        </p>
+        <ul>
+            <li><strong>Interactive Booking Modal:</strong> Clicking <strong>Schedule Reservation</strong> opens a modal form allowing users to select an available compute node, choose a reservation date, specify start/end hours, and state business justification.</li>
+            <li><strong>Client-Side Validation & Feedback:</strong> The reservation workflow validates that requested end times exceed start times, immediately updates the UI counter, and fires a non-intrusive toast notification confirming submission.</li>
+        </ul>
+
+        <h3 class="sub-heading">4.7 Department Compliance & Analytics</h3>
+        <p>
+            The reporting section provides graphical analytics on departmental training compliance across corporate divisions:
+        </p>
+        <ul>
+            <li>Graduate Engineering: 95.0% compliance</li>
+            <li>Cloud & DevOps: 92.5% compliance</li>
+            <li>Data Science & AI: 90.0% compliance</li>
+            <li>IT Infrastructure: 85.0% compliance</li>
+            <li>Finance & Operations: 82.0% compliance</li>
+        </ul>
+
+        <h3 class="sub-heading">4.8 Role-Based Perspective Switching</h3>
+        <p>
+            To demonstrate multi-persona workflows, the header includes an instant role switcher supporting:
+        </p>
+        <ul>
+            <li><strong>Rahul Sharma (Trainee):</strong> Focuses on course materials, personal bookings, and node availability.</li>
+            <li><strong>David Kumar (Trainer):</strong> Focuses on session agendas, lab venues, and trainee attendance.</li>
+            <li><strong>Sarah Jenkins (Lab Administrator):</strong> Focuses on node maintenance, approval queues, and utilization metrics.</li>
+        </ul>
+
+        <h3 class="sub-heading">4.9 Database Implementation</h3>
+        <p>
+            The MySQL database <span class="badge-code">corporate_training_lab_db</span> has been structured, created, and populated in XAMPP:
+        </p>
+        <ul>
+            <li>10 normalized tables established with foreign key constraints (<span class="badge-code">ON DELETE RESTRICT</span>) and check constraints.</li>
+            <li>Comprehensive seed dataset including 25 users, 8 courses, 3 facilities, 14 machines, 27 sessions, 44 enrollments, 24 attendance records, 11 feedback ratings, 22 bookings, and 16 notifications.</li>
+            <li>Standardized 60-character BCrypt password hashing applied to all seed accounts for the credential <span class="badge-code">Admin@123</span>.</li>
+        </ul>
+
+        <h2 class="section-heading">5. Technology Stack</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Technology Layer</th>
+                    <th>Tool / Framework</th>
+                    <th>Technical Justification</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>User Interface (Markup)</strong></td>
+                    <td><strong>HTML5</strong></td>
+                    <td>Semantic, accessible layout including modal dialogs, data tables, and input forms without external library overhead.</td>
+                </tr>
+                <tr>
+                    <td><strong>Styling & Presentation</strong></td>
+                    <td><strong>CSS3</strong></td>
+                    <td>Modern dark-slate corporate aesthetics, responsive CSS Grid and Flexbox layouts, animated RAM meters, and custom typography (<em>Plus Jakarta Sans</em> and <em>JetBrains Mono</em>).</td>
+                </tr>
+                <tr>
+                    <td><strong>Client-Side Logic</strong></td>
+                    <td><strong>Vanilla JavaScript (ES6+)</strong></td>
+                    <td>High-performance DOM manipulation, event handling, real-time catalog filtering, state simulation, and terminal rendering without heavyweight runtime dependencies.</td>
+                </tr>
+                <tr>
+                    <td><strong>Relational Database</strong></td>
+                    <td><strong>MySQL 8.0 (InnoDB via XAMPP)</strong></td>
+                    <td>ACID-compliant storage engine, strict foreign key enforcement, native <span class="badge-code">CHECK</span> constraints, and index optimization.</td>
+                </tr>
+                <tr>
+                    <td><strong>Credential Security</strong></td>
+                    <td><strong>Spring Security BCrypt</strong></td>
+                    <td>60-character cryptographic hashing (<span class="badge-code">$2a$10$...</span>) with internal 128-bit random salt, ensuring zero plaintext password persistence.</td>
+                </tr>
+                <tr>
+                    <td><strong>Planned Backend Service</strong></td>
+                    <td><strong>Java 17 & Spring Boot 3.x</strong></td>
+                    <td>Enterprise middle tier offering Spring Data JPA, HikariCP connection pooling, RESTful controllers, and Spring Security JWT filters (Phase 2).</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2 class="section-heading">6. Project Folder Structure</h2>
+        <pre class="tree-block">Corporate Training Resource & Lab Infrastructure Management Platform/
+├── docs/                                  # Comprehensive technical reports, presentation guides, and requirements
+│   ├── guide-presentation-cheatsheet.md  # Viva voce oral defense Q&A preparation script
+│   ├── project-overview.md                # System requirements specification & architectural overview
+│   ├── PROJECT_DOCUMENTATION.html         # High-resolution, printable HTML documentation report (this document)
+│   ├── PROJECT_DOCUMENTATION.md           # Master academic project documentation
+│   └── PROJECT_DOCUMENTATION_REPORT.md    # Consolidated submission report
+├── frontend/                              # Client-side user interface application
+│   ├── css/
+│   │   └── style.css                      # Enterprise dark-slate theme, typography, badges, and layout grid
+│   ├── js/
+│   │   └── app.js                         # Application state, catalog filters, terminal simulator, and reservation logic
+│   └── index.html                         # Primary dashboard console containing all 6 functional views
+├── db/                                    # Enterprise database migrations, seed data, and analytical scripts
+│   ├── complete_database_setup.sql        # All-in-one idempotent schema creation and seed script (10 tables)
+│   ├── 01_migration.sql                   # 3NF relational schema migration script
+│   ├── 02_seed_data.sql                   # Realistic 2026 enterprise seed data script
+│   └── 03_queries.sql                     # Analytical reports, KPI aggregation, and conflict detection queries
+├── backend/                               # Java Spring Boot application (Scheduled for Phase 2)
+│   └── README.md                          # Backend architecture, JPA entity plan, and REST API specification
+└── README.md                              # Root repository overview and setup instructions</pre>
+
+        <h2 class="section-heading">7. Functional Requirements and Current Status</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Requirement ID</th>
+                    <th>Module / Feature</th>
+                    <th>Detailed Description</th>
+                    <th>Implementation Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>FR-01</strong></td>
+                    <td><strong>Executive Dashboard</strong></td>
+                    <td>Top navigation bar with breadcrumbs, environment status, metric cards, and memory allocation gauge.</td>
+                    <td><span class="badge badge-done">Frontend Created</span></td>
+                </tr>
+                <tr>
+                    <td><strong>FR-02</strong></td>
+                    <td><strong>Compute Fleet Monitoring</strong></td>
+                    <td>Inventory of 14 machines with IP addresses, OS tags, vCPU counts, and dynamic RAM telemetry meters.</td>
+                    <td><span class="badge badge-done">Frontend Created</span></td>
+                </tr>
+                <tr>
+                    <td><strong>FR-03</strong></td>
+                    <td><strong>Hardware Status Filtering</strong></td>
+                    <td>Instant client-side filtering by operational state (<span class="badge-code">Available</span>, <span class="badge-code">Maintenance</span>, <span class="badge-code">Retired</span>).</td>
+                    <td><span class="badge badge-done">Frontend Created</span></td>
+                </tr>
+                <tr>
+                    <td><strong>FR-04</strong></td>
+                    <td><strong>Venue Filtering & Search</strong></td>
+                    <td>Dropdown filtering by physical lab room (<span class="badge-code">Cloud Lab A</span>, <span class="badge-code">AI Lab</span>) and keyword search.</td>
+                    <td><span class="badge badge-done">Frontend Created</span></td>
+                </tr>
+                <tr>
+                    <td><strong>FR-05</strong></td>
+                    <td><strong>Layout Toggle</strong></td>
+                    <td>Seamless toggling between visual Card Grid View and dense Enterprise Table View.</td>
+                    <td><span class="badge badge-done">Frontend Created</span></td>
+                </tr>
+                <tr>
+                    <td><strong>FR-06</strong></td>
+                    <td><strong>SSH Terminal Simulator</strong></td>
+                    <td>Interactive dark terminal overlay showing IP handshake, RSA key verification, and live diagnostics.</td>
+                    <td><span class="badge badge-done">Frontend Created</span></td>
+                </tr>
+                <tr>
+                    <td><strong>FR-07</strong></td>
+                    <td><strong>Lab Facilities Catalog</strong></td>
+                    <td>Physical venue directory presenting room numbers, seating capacity, and cluster density.</td>
+                    <td><span class="badge badge-done">Frontend Created</span></td>
+                </tr>
+                <tr>
+                    <td><strong>FR-08</strong></td>
+                    <td><strong>Course Curriculum Module</strong></td>
+                    <td>8 enterprise training tracks with instructor assignments, timelines, and downloadable lab assets.</td>
+                    <td><span class="badge badge-done">Frontend Created</span></td>
+                </tr>
+                <tr>
+                    <td><strong>FR-09</strong></td>
+                    <td><strong>Daily Session Schedule</strong></td>
+                    <td>Daily timetable mapping 27 classroom slots across courses, instructors, rooms, and time windows.</td>
+                    <td><span class="badge badge-done">Frontend Created</span></td>
+                </tr>
+                <tr>
+                    <td><strong>FR-10</strong></td>
+                    <td><strong>Lab Reservation Engine</strong></td>
+                    <td>Interactive modal to book available compute machines with start/end time validation.</td>
+                    <td><span class="badge badge-done">Frontend Created</span></td>
+                </tr>
+                <tr>
+                    <td><strong>FR-11</strong></td>
+                    <td><strong>Reservation Status Audit</strong></td>
+                    <td>Booking ledger tracking 22 reservations across <span class="badge-code">APPROVED</span>, <span class="badge-code">PENDING</span>, <span class="badge-code">REJECTED</span>, etc.</td>
+                    <td><span class="badge badge-done">Frontend Created</span></td>
+                </tr>
+                <tr>
+                    <td><strong>FR-12</strong></td>
+                    <td><strong>Department Compliance</strong></td>
+                    <td>Visual progress analytics displaying attendance compliance rates across 5 corporate divisions.</td>
+                    <td><span class="badge badge-done">Frontend Created</span></td>
+                </tr>
+                <tr>
+                    <td><strong>FR-13</strong></td>
+                    <td><strong>Multi-Role Switcher</strong></td>
+                    <td>Header switcher allowing instant demonstration of Trainee, Trainer, and Admin perspectives.</td>
+                    <td><span class="badge badge-done">Prototype Demo</span></td>
+                </tr>
+                <tr>
+                    <td><strong>FR-14</strong></td>
+                    <td><strong>Relational Schema</strong></td>
+                    <td>10 normalized 3NF tables with foreign keys and check constraints deployed in XAMPP MySQL.</td>
+                    <td><span class="badge badge-done">Database Prepared</span></td>
+                </tr>
+                <tr>
+                    <td><strong>FR-15</strong></td>
+                    <td><strong>Spring Boot REST API</strong></td>
+                    <td>Middle-tier service exposing endpoints (<span class="badge-code">/api/machines</span>, <span class="badge-code">/api/bookings</span>) via Spring Data JPA.</td>
+                    <td><span class="badge badge-pending">Pending Phase 2</span></td>
+                </tr>
+                <tr>
+                    <td><strong>FR-16</strong></td>
+                    <td><strong>Server-Side Security</strong></td>
+                    <td>Spring Security 6.x implementation with stateless JWT authentication and role-based permissions.</td>
+                    <td><span class="badge badge-pending">Pending Phase 2</span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2 class="section-heading">8. Database Status</h2>
+        <p>
+            <strong>Database Identifier:</strong> <span class="badge-code">corporate_training_lab_db</span><br>
+            <strong>Host Environment:</strong> MySQL 8.0+ running under XAMPP on <span class="badge-code">localhost:3306</span><br>
+            <strong>Storage Engine & Encoding:</strong> InnoDB / <span class="badge-code">utf8mb4_unicode_ci</span>
+        </p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Table Name</th>
+                    <th>Primary Key</th>
+                    <th>Foreign Keys & References</th>
+                    <th>Records Seeded</th>
+                    <th>Primary Purpose</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>departments</strong></td>
+                    <td><span class="badge-code">id</span></td>
+                    <td>None</td>
+                    <td>6</td>
+                    <td>Corporate organizational divisions (IT, Cloud, AI, Engineering, HR, Finance).</td>
+                </tr>
+                <tr>
+                    <td><strong>users</strong></td>
+                    <td><span class="badge-code">id</span></td>
+                    <td><span class="badge-code">department_id</span> &rarr; departments(id)</td>
+                    <td>25</td>
+                    <td>Enterprise accounts (1 Admin, 4 Trainers, 20 Trainees) with BCrypt hashes.</td>
+                </tr>
+                <tr>
+                    <td><strong>labs</strong></td>
+                    <td><span class="badge-code">id</span></td>
+                    <td>None</td>
+                    <td>3</td>
+                    <td>Physical corporate facility locations, room numbers, and workstation capacities.</td>
+                </tr>
+                <tr>
+                    <td><strong>lab_machines</strong></td>
+                    <td><span class="badge-code">id</span></td>
+                    <td><span class="badge-code">lab_id</span> &rarr; labs(id)</td>
+                    <td>14</td>
+                    <td>Physical & virtual compute nodes with RAM, vCPU, OS, IP, and status flags.</td>
+                </tr>
+                <tr>
+                    <td><strong>training_courses</strong></td>
+                    <td><span class="badge-code">id</span></td>
+                    <td><span class="badge-code">trainer_id</span> &rarr; users(id)</td>
+                    <td>8</td>
+                    <td>Corporate training curricula, course codes, duration, and status.</td>
+                </tr>
+                <tr>
+                    <td><strong>course_materials</strong></td>
+                    <td><span class="badge-code">id</span></td>
+                    <td><span class="badge-code">course_id</span> &rarr; training_courses(id)</td>
+                    <td>10</td>
+                    <td>Technical reference resources (PDF lab guides, notebooks, code repos).</td>
+                </tr>
+                <tr>
+                    <td><strong>training_sessions</strong></td>
+                    <td><span class="badge-code">id</span></td>
+                    <td><span class="badge-code">course_id</span>, <span class="badge-code">trainer_id</span>, <span class="badge-code">lab_id</span></td>
+                    <td>27</td>
+                    <td>Daily classroom lectures with <span class="badge-code">CHECK (end_time &gt; start_time)</span> constraints.</td>
+                </tr>
+                <tr>
+                    <td><strong>enrollments</strong></td>
+                    <td><span class="badge-code">id</span></td>
+                    <td><span class="badge-code">user_id</span> &rarr; users(id), <span class="badge-code">course_id</span></td>
+                    <td>44</td>
+                    <td>Trainee registrations tracking progress percentages (0 - 100%).</td>
+                </tr>
+                <tr>
+                    <td><strong>attendance</strong></td>
+                    <td><span class="badge-code">id</span></td>
+                    <td><span class="badge-code">session_id</span>, <span class="badge-code">user_id</span>, <span class="badge-code">marked_by</span></td>
+                    <td>24</td>
+                    <td>Classroom presence audit logs (<span class="badge-code">PRESENT</span>, <span class="badge-code">ABSENT</span>, <span class="badge-code">LATE</span>, <span class="badge-code">EXCUSED</span>).</td>
+                </tr>
+                <tr>
+                    <td><strong>feedback</strong></td>
+                    <td><span class="badge-code">id</span></td>
+                    <td><span class="badge-code">course_id</span>, <span class="badge-code">user_id</span> &rarr; users(id)</td>
+                    <td>11</td>
+                    <td>Post-training trainee evaluations and ratings (1 to 5).</td>
+                </tr>
+                <tr>
+                    <td><strong>lab_bookings</strong></td>
+                    <td><span class="badge-code">id</span></td>
+                    <td><span class="badge-code">user_id</span>, <span class="badge-code">machine_id</span>, <span class="badge-code">approved_by</span></td>
+                    <td>22</td>
+                    <td>Compute reservation records with audit timestamps and review remarks.</td>
+                </tr>
+                <tr>
+                    <td><strong>notifications</strong></td>
+                    <td><span class="badge-code">id</span></td>
+                    <td><span class="badge-code">user_id</span> &rarr; users(id)</td>
+                    <td>16</td>
+                    <td>System dispatch notifications and booking status alert messages.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="callout-box">
+            <strong>Security & Password Storage Standard:</strong><br>
+            All user passwords in MySQL are stored as 60-character cryptographic hashes generated with Spring Security BCrypt with log rounds 10 (<span class="badge-code">$2a$10$...</span>). The demo password for all accounts is <span class="badge-code">Admin@123</span>. Plaintext passwords are never recorded in database tables.
+        </div>
+
+        <h2 class="section-heading">9. Current Limitations</h2>
+        <ul>
+            <li><strong>Client-Side Simulation:</strong> The frontend currently utilizes an in-memory JavaScript state model mirroring the database schema. Client interactions (such as submitting reservations) update local browser state and toast alerts, but do not directly persist to MySQL without a backend server.</li>
+            <li><strong>Stateless Authentication:</strong> The role selector provides multi-persona demonstration without cryptographic session management, JWT tokens, or HTTP-only cookies.</li>
+            <li><strong>Database Connectivity:</strong> Direct browser-to-MySQL communication is intentionally excluded due to standard enterprise security policies prohibiting direct database exposure to client browsers.</li>
+            <li><strong>Mocked Terminal Diagnostics:</strong> The interactive SSH console simulates server handshakes and diagnostic telemetry in JavaScript rather than executing live network sockets against physical hardware.</li>
+            <li><strong>Simulated File Downloads:</strong> Resource download links initiate simulated browser download actions rather than streaming binary objects from a cloud storage service (e.g., AWS S3).</li>
+        </ul>
+
+        <h2 class="section-heading">10. Future Enhancements (Phase 2 Development)</h2>
+        <ul>
+            <li><strong>Java Spring Boot 3 Backend Microservice:</strong> Develop a lightweight, high-performance REST API backend using Java 17 and Spring Boot 3.x with Spring Data JPA and Hibernate ORM.</li>
+            <li><strong>Spring Security & Stateless JWT Authentication:</strong> Replace client-side role toggling with a secure <span class="badge-code">/api/auth/login</span> endpoint issuing signed JSON Web Tokens (JWT) with Role-Based Access Control (<span class="badge-code">@PreAuthorize</span>).</li>
+            <li><strong>Automated Conflict-Detection Engine:</strong> Implement a backend scheduling validator utilizing the standard interval overlap formula to prevent double-booking before database write attempts.</li>
+            <li><strong>Asynchronous REST Integration:</strong> Upgrade frontend <span class="badge-code">app.js</span> methods to replace mock records with asynchronous <span class="badge-code">fetch()</span> API calls against backend REST endpoints.</li>
+            <li><strong>Automated Notification Dispatch:</strong> Implement email alerts (via Spring Mail / SMTP) notifying trainees when administrators approve or reject lab reservations.</li>
+            <li><strong>Automated Testing Suite:</strong> Implement automated unit and integration tests using JUnit 5 and Mockito, targeting &ge; 85% code coverage across all controller and service classes.</li>
+        </ul>
+
+        <h2 class="section-heading">11. System Testing Plan</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Test Case ID</th>
+                    <th>Test Objective</th>
+                    <th>Procedure / Input Action</th>
+                    <th>Expected Operational Result</th>
+                    <th>Verification Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>TC-01</strong></td>
+                    <td><strong>Interface Initialization</strong></td>
+                    <td>Open <span class="badge-code">frontend/index.html</span> in Chrome/Edge.</td>
+                    <td>Application loads cleanly with corporate styling, active metric cards, and zero console errors.</td>
+                    <td><span class="badge badge-done">Pass</span></td>
+                </tr>
+                <tr>
+                    <td><strong>TC-02</strong></td>
+                    <td><strong>Status Filter Validation</strong></td>
+                    <td>Click the <strong>Available</strong> filter button on the Compute Nodes tab.</td>
+                    <td>The grid updates instantly to display only the 6 nodes currently in <span class="badge-code">AVAILABLE</span> state.</td>
+                    <td><span class="badge badge-done">Pass</span></td>
+                </tr>
+                <tr>
+                    <td><strong>TC-03</strong></td>
+                    <td><strong>Venue Filter Validation</strong></td>
+                    <td>Select <strong>AI Research Lab</strong> from the lab facility dropdown.</td>
+                    <td>The grid updates to display only the GPU nodes located in Room 302.</td>
+                    <td><span class="badge badge-done">Pass</span></td>
+                </tr>
+                <tr>
+                    <td><strong>TC-04</strong></td>
+                    <td><strong>Layout Switching</strong></td>
+                    <td>Click the <strong>Table View</strong> icon in the action bar.</td>
+                    <td>Machine display transforms from card layout to dense tabular view without data loss.</td>
+                    <td><span class="badge badge-done">Pass</span></td>
+                </tr>
+                <tr>
+                    <td><strong>TC-05</strong></td>
+                    <td><strong>SSH Terminal Handshake</strong></td>
+                    <td>Click the <strong>SSH</strong> diagnostic button on node <span class="badge-code">SRV-K8S-M01</span>.</td>
+                    <td>Dark diagnostic terminal overlay launches, displays IP resolution, RSA handshake, and CPU metrics.</td>
+                    <td><span class="badge badge-done">Pass</span></td>
+                </tr>
+                <tr>
+                    <td><strong>TC-06</strong></td>
+                    <td><strong>Reservation Modal Submission</strong></td>
+                    <td>Click <strong>Schedule Reservation</strong>, select an available machine, specify hours, and submit.</td>
+                    <td>Modal validates time interval, updates available machine count, and triggers green toast notification.</td>
+                    <td><span class="badge badge-done">Pass</span></td>
+                </tr>
+                <tr>
+                    <td><strong>TC-07</strong></td>
+                    <td><strong>Multi-Role Switching</strong></td>
+                    <td>Change the top header role selector from Trainee to Admin.</td>
+                    <td>System switches active user to Sarah Jenkins, displays administrator perspective, and fires alert.</td>
+                    <td><span class="badge badge-done">Pass</span></td>
+                </tr>
+                <tr>
+                    <td><strong>TC-08</strong></td>
+                    <td><strong>Live Search Functionality</strong></td>
+                    <td>Enter <span class="badge-code">"Ubuntu"</span> into the search bar.</td>
+                    <td>Node catalog filters in real time to show only machines executing the Ubuntu OS.</td>
+                    <td><span class="badge badge-done">Pass</span></td>
+                </tr>
+                <tr>
+                    <td><strong>TC-09</strong></td>
+                    <td><strong>Database Schema Integrity</strong></td>
+                    <td>Inspect <span class="badge-code">corporate_training_lab_db</span> in phpMyAdmin.</td>
+                    <td>All 10 tables exist with correct foreign keys, indexes, and InnoDB engine specifications.</td>
+                    <td><span class="badge badge-done">Pass</span></td>
+                </tr>
+                <tr>
+                    <td><strong>TC-10</strong></td>
+                    <td><strong>Seed Data Verification</strong></td>
+                    <td>Execute <span class="badge-code">SELECT COUNT(*) FROM lab_machines;</span> in MySQL.</td>
+                    <td>Query returns exactly 14 records matching the operational hardware fleet.</td>
+                    <td><span class="badge badge-done">Pass</span></td>
+                </tr>
+                <tr>
+                    <td><strong>TC-11</strong></td>
+                    <td><strong>Backend REST Connection</strong></td>
+                    <td>Dispatch <span class="badge-code">GET /api/machines</span> from client application.</td>
+                    <td>Server responds with JSON payload of live machines from MySQL database.</td>
+                    <td><span class="badge badge-pending">Pending Phase 2</span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2 class="section-heading">12. Conclusion</h2>
+        <p>
+            The <strong>CorpLab Nexus</strong> project has successfully fulfilled all foundational requirements for Phase 1. 
+        </p>
+        <p>
+            The client-side operational console provides an executive, highly polished user experience tailored to the distinct operational needs of Trainees, Instructors, and System Administrators. Hardware telemetry, status filtering, diagnostic simulation, curriculum indexing, daily session tracking, and reservation workflows are fully demonstrated. Concurrently, the persistence tier has been designed and realized as a 10-table, Third Normal Form (3NF) relational database in MySQL 8.0, complete with referential integrity, check constraints, realistic seed data, and cryptographic BCrypt security.
+        </p>
+        <p>
+            With the presentation layer and data layer fully established and verified, the project is architecturally poised for Phase 2: the implementation of the Java Spring Boot REST microservice to bridge client-side interactions directly with persistent enterprise database storage.
+        </p>
+
+        <h2 class="section-heading">Appendix A — Academic Note on 3-Tier Enterprise Separation</h2>
+        <p>
+            In enterprise web engineering, web browsers are strictly isolated from direct database interaction. Client-side web browsers execute code in an untrusted end-user environment. Connecting a browser directly to a database server would expose database credentials, bypass business validation logic, and expose the persistence tier to unauthorized data tampering and SQL injection vulnerabilities.
+        </p>
+        <p>
+            Therefore, CorpLab Nexus adheres strictly to the <strong>3-Tier Enterprise Architecture</strong>:
+        </p>
+        <ol>
+            <li><strong>Tier 1 (Presentation):</strong> HTML5 / CSS3 / Vanilla JavaScript running securely in the client browser.</li>
+            <li><strong>Tier 2 (Application / Business Logic):</strong> Java Spring Boot REST API executing on the application server (Phase 2).</li>
+            <li><strong>Tier 3 (Data Persistence):</strong> MySQL 8.0 relational database operating behind a secure internal firewall.</li>
+        </ol>
+        <p>
+            The current implementation successfully validates Tier 1 and Tier 3 in parallel, establishing a clean foundation for final full-stack integration.
+        </p>
+
+    </div>
+
+</body>
+</html>

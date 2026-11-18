@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CorpLab Nexus | Corporate Management Console</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+
+<div class="dashboard-shell">
+    <!-- Top Enterprise Navbar -->
+    <header class="top-navbar">
+        <div class="nav-left-brand">
+            <div class="brand-icon-sm">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+                    <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+                    <line x1="6" y1="6" x2="6.01" y2="6"></line>
+                    <line x1="6" y1="18" x2="6.01" y2="18"></line>
+                </svg>
+            </div>
+            <div class="nav-title">CorpLab <span>Nexus</span></div>
+            <div style="font-size: 13px; font-weight: 600; color: #475569; display: flex; align-items: center; gap: 8px; margin-left: 20px; padding-left: 18px; border-left: 1px solid var(--border-color);">
+                <span style="display:inline-block; width:8px; height:8px; background:#10b981; border-radius:50%;"></span>
+                Corporate Training Multi-Hub Network <span style="color: #94a3b8;">&bull;</span> Central Infrastructure Hub
+            </div>
+        </div>
+
+        <div class="nav-right-actions">
+            <!-- Role Switcher -->
+            <div class="role-pill-selector" title="Switch Demonstration Role Perspective">
+                <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 700;">Role:</span>
+                <select id="role-perspective-select" onchange="changeRolePerspective(this.value)">
+                    <option value="ADMIN">Company Admin</option>
+                    <option value="TRAINER">Trainer / Teacher</option>
+                    <option value="EMPLOYEE">Student / Trainee</option>
+                </select>
+            </div>
+
+            <!-- Company Real-Time Notification Bell -->
+            <div class="notification-wrapper" style="position: relative;">
+                <button class="notification-bell-btn" id="btn-notification-bell" onclick="toggleNotificationMenu()" title="Live Platform Activity Notifications">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                    </svg>
+                    <span class="notification-badge-num" id="notif-badge-count">3</span>
+                </button>
+                <div class="notification-dropdown" id="notif-dropdown-menu">
+                    <div class="notification-dropdown-header">
+                        <span style="font-weight: 700; font-size: 13px; color: var(--text-primary);">Platform Live Telemetry</span>
+                        <button class="btn-secondary" style="font-size: 11px; padding: 4px 8px;" onclick="clearAllNotifications()">Clear All</button>
+                    </div>
+                    <div class="notification-dropdown-list" id="notif-dropdown-list">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="health-pill" title="System Backend Health">
+                <span class="health-dot"></span>
+                <span id="system-health-text">Connecting to MySQL...</span>
+            </div>
+
+            <div class="user-profile-badge">
+                <div class="avatar-bubble" id="user-avatar">AD</div>
+                <div class="user-meta-name" id="user-display-name">Admin User</div>
+                <span class="user-role-tag" id="user-display-role">ADMIN</span>
+            </div>
+
+            <button class="btn-signout" onclick="handleLogout()" title="End Session">Sign Out</button>
+        </div>
+    </header>
+
+    <!-- Master Workspace Layout -->
+    <div class="dashboard-workspace">
+        <!-- Sidebar Navigation -->
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-category-title">Platform Overview</div>
+            <button class="sidebar-menu-btn active" data-view="overview" onclick="switchView('overview')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                <span>Dashboard Overview</span>
+            </button>
+
+            <div class="sidebar-category-title">Role Workspaces</div>
+            <button class="sidebar-menu-btn" data-view="student" onclick="switchView('student')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                <span>Trainee / Student Hub</span>
+            </button>
+            <button class="sidebar-menu-btn" data-view="teacher" onclick="switchView('teacher')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                <span>Faculty / Trainer Console</span>
+            </button>
+
+            <div class="sidebar-category-title">People & Organization</div>
+            <button class="sidebar-menu-btn" data-view="employees" onclick="switchView('employees')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                <span>Employee Management</span>
+            </button>
+            <button class="sidebar-menu-btn" data-view="trainers" onclick="switchView('trainers')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                <span>Trainer Management</span>
+            </button>
+
+            <div class="sidebar-category-title">Learning & Curriculum</div>
+            <button class="sidebar-menu-btn" data-view="programs" onclick="switchView('programs')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                <span>Training Programs</span>
+            </button>
+
+            <div class="sidebar-category-title">Infrastructure Assets</div>
+            <button class="sidebar-menu-btn" data-view="labs" onclick="switchView('labs')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                <span>Lab Infrastructure</span>
+            </button>
+            <button class="sidebar-menu-btn" data-view="resources" onclick="switchView('resources')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
+                <span>Resource Management</span>
+            </button>
+
+            <div class="sidebar-category-title">Workflows & Analytics</div>
+            <button class="sidebar-menu-btn" data-view="requests" onclick="switchView('requests')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                <span>Resource Requests</span>
+            </button>
+            <button class="sidebar-menu-btn" data-view="reports" onclick="switchView('reports')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                <span>Reports & Analytics</span>
+            </button>
+
+            <div class="sidebar-category-title">System & Security</div>
+            <button class="sidebar-menu-btn" data-view="profile" onclick="switchView('profile')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                <span>Role & Permissions</span>
+            </button>
+            <button class="sidebar-menu-btn" data-view="logs" onclick="switchView('logs')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                <span>Activity Audit Logs</span>
+            </button>
+        </aside>
+
+        <!-- Main Dynamic View Container -->
+        <main class="dashboard-content" id="main-content">
+            <!-- VIEW 1: OVERVIEW -->
+            <section id="view-overview" class="view-panel">
+                <div class="content-header-row">
+                    <div class="view-heading">
+                        <h2>Enterprise Executive Dashboard</h2>
+                        <p>Real-time corporate telemetry, resource health, and training program oversight.</p>
+                    </div>
+                </div>
+
+                <!-- 8 Metric Cards Grid -->
+                <div class="stats-grid-8">
+                    <div class="stat-metric-card">
+                        <div class="stat-card-header">
+                            <span>Employees</span>
+                            <div class="stat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg></div>
+                        </div>
+                        <div class="stat-value" id="card-employees">...</div>
+                        <div class="stat-label">Active Trainees</div>
+                    </div>
+                    <div class="stat-metric-card">
+                        <div class="stat-card-header">
+                            <span>Trainers</span>
+                            <div class="stat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg></div>
+                        </div>
+                        <div class="stat-value" id="card-trainers">...</div>
+                        <div class="stat-label">Certified Faculty</div>
+                    </div>
+                    <div class="stat-metric-card">
+                        <div class="stat-card-header">
+                            <span>Programs</span>
+                            <div class="stat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon></svg></div>
+                        </div>
+                        <div class="stat-value" id="card-programs">...</div>
+                        <div class="stat-label">Curriculum Tracks</div>
+                    </div>
+                    <div class="stat-metric-card">
+                        <div class="stat-card-header">
+                            <span>Labs</span>
+                            <div class="stat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg></div>
+                        </div>
+                        <div class="stat-value" id="card-labs">...</div>
+                        <div class="stat-label">Available Facilities</div>
+                    </div>
+                    <div class="stat-metric-card">
+                        <div class="stat-card-header">
+                            <span>Resources</span>
+                            <div class="stat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect></svg></div>
+                        </div>
+                        <div class="stat-value" id="card-resources">...</div>
+                        <div class="stat-label">Compute Nodes</div>
+                    </div>
+                    <div class="stat-metric-card">
+                        <div class="stat-card-header">
+                            <span>Pending</span>
+                            <div class="stat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle></svg></div>
+                        </div>
+                        <div class="stat-value" id="card-requests">...</div>
+                        <div class="stat-label">Awaiting Approval</div>
+                    </div>
+                    <div class="stat-metric-card">
+                        <div class="stat-card-header">
+                            <span>Uptime</span>
+                            <div class="stat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg></div>
+                        </div>
+                        <div class="stat-value" id="card-uptime">99.98%</div>
+                        <div class="stat-label">Infrastructure SLA</div>
+                    </div>
+                    <div class="stat-metric-card">
+                        <div class="stat-card-header">
+                            <span>Health</span>
+                            <div class="stat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></div>
+                        </div>
+                        <div class="stat-value" id="card-health" style="font-size:20px; color:var(--success); font-weight:800;">OPTIMAL</div>
+                        <div class="stat-label">Security & Integrity</div>
+                    </div>
+                </div>
+
+                <!-- Charts Split -->
+                <div class="charts-split-grid">
+                    <div class="chart-card-panel">
+                        <div class="panel-header-title">
+                            <span>Cohort Enrollment & Upskilling Trend (2026)</span>
+                            <span style="font-size:12px; color:var(--text-muted);">Monthly Active Learners</span>
+                        </div>
+                        <div id="chart-enrollment-bar" style="height: 220px; display: flex; align-items: flex-end; gap: 24px; padding: 10px 20px;"></div>
+                    </div>
+                    <div class="chart-card-panel">
+                        <div class="panel-header-title">
+                            <span>Lab Compute Utilization</span>
+                        </div>
+                        <div id="chart-lab-utilization" style="display: flex; flex-direction: column; gap: 14px; padding-top: 10px;"></div>
+                    </div>
+                </div>
+
+                <!-- Recent Activities Stream -->
+                <div class="data-panel-card">
+                    <div class="panel-header-title">
+                        <span>Live System Activity Stream</span>
+                        <button class="btn-secondary" onclick="loadOverview()">Refresh Feed</button>
+                    </div>
+                    <div id="overview-activity-stream" style="display:flex; flex-direction:column; gap:10px;">Loading events...</div>
+                </div>
+            </section>
+
+            <!-- VIEW 2: EMPLOYEES -->
+            <section id="view-employees" class="view-panel" style="display: none;">
+                <div class="content-header-row">
+                    <div class="view-heading">
+                        <h2>Employee Management</h2>
+                        <p>Corporate directory of trainees, department assignments, and contact profiles.</p>
+                    </div>
+                    <button class="btn-action-primary" onclick="openModal('employee-modal')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        Add Employee
+                    </button>
+                </div>
+
+                <div class="data-panel-card">
+                    <div class="table-toolbar-row">
+                        <input type="text" class="table-search-input" id="search-employees" onkeyup="filterTable('tbl-employees', this.value)" placeholder="Search employees by name, email, department...">
+                    </div>
+                    <table class="enterprise-data-table" id="tbl-employees">
+                        <thead>
+                        <tr>
+                            <th>Employee Name</th>
+                            <th>Username</th>
+                            <th>Corporate Email</th>
+                            <th>Department</th>
+                            <th>Phone</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tbody-employees"><tr><td colspan="7">Loading employees...</td></tr></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- VIEW 3: TRAINERS -->
+            <section id="view-trainers" class="view-panel" style="display: none;">
+                <div class="content-header-row">
+                    <div class="view-heading">
+                        <h2>Trainer & Faculty Management</h2>
+                        <p>Certified enterprise instructors, subject matter expertise, and program assignments.</p>
+                    </div>
+                    <button class="btn-action-primary" onclick="openModal('trainer-modal')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        Add Trainer
+                    </button>
+                </div>
+
+                <div class="data-panel-card">
+                    <div class="table-toolbar-row">
+                        <input type="text" class="table-search-input" id="search-trainers" onkeyup="filterTable('tbl-trainers', this.value)" placeholder="Search trainers by name or domain...">
+                    </div>
+                    <table class="enterprise-data-table" id="tbl-trainers">
+                        <thead>
+                        <tr>
+                            <th>Trainer Name</th>
+                            <th>Specialization / Department</th>
+                            <th>Corporate Email</th>
+                            <th>Contact</th>
+                            <th>Role Badge</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tbody-trainers"><tr><td colspan="6">Loading trainers...</td></tr></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- VIEW 4: TRAINING PROGRAMS -->
+            <section id="view-programs" class="view-panel" style="display: none;">
+                <div class="content-header-row">
+                    <div class="view-heading">
+                        <h2>Training Program Management</h2>
+                        <p>Enterprise syllabus catalog, scheduled cohorts, and course progress tracking.</p>
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn-secondary" onclick="exportProgramsToExcel()">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                            Export to Excel (.csv)
+                        </button>
+                        <button class="btn-action-primary" onclick="openModal('program-modal')">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            Create Program
+                        </button>
+                    </div>
+                </div>
+
+                <div class="data-panel-card">
+                    <div class="table-toolbar-row">
+                        <input type="text" class="table-search-input" id="search-programs" onkeyup="filterTable('tbl-programs', this.value)" placeholder="Search training programs...">
+                    </div>
+                    <table class="enterprise-data-table" id="tbl-programs">
+                        <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Program Title</th>
+                            <th>Category</th>
+                            <th>Lead Trainer</th>
+                            <th>Duration</th>
+                            <th>Enrolled</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tbody-programs"><tr><td colspan="8">Loading programs...</td></tr></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- VIEW 5: LAB INFRASTRUCTURE -->
+            <section id="view-labs" class="view-panel" style="display: none;">
+                <div class="content-header-row">
+                    <div class="view-heading">
+                        <h2>Lab Infrastructure Facilities</h2>
+                        <p>Physical and virtual computer laboratories, venue locations, and seat capacities.</p>
+                    </div>
+                    <button class="btn-action-primary" onclick="openModal('lab-modal')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        Add Laboratory
+                    </button>
+                </div>
+
+                <div class="data-panel-card">
+                    <table class="enterprise-data-table" id="tbl-labs">
+                        <thead>
+                        <tr>
+                            <th>Laboratory Name</th>
+                            <th>Physical Location</th>
+                            <th>Workstation Capacity</th>
+                            <th>Operational Description</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tbody-labs"><tr><td colspan="6">Loading labs...</td></tr></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- VIEW 6: RESOURCES -->
+            <section id="view-resources" class="view-panel" style="display: none;">
+                <div class="content-header-row">
+                    <div class="view-heading">
+                        <h2>Compute Resource & Equipment Management</h2>
+                        <p>Dedicated servers, GPU clusters, and high-availability database nodes.</p>
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn-secondary" onclick="exportResourcesToExcel()">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                            Export to Excel (.csv)
+                        </button>
+                        <button class="btn-action-primary" onclick="openModal('resource-modal')">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                            Add Resource
+                        </button>
+                    </div>
+                </div>
+
+                <div class="data-panel-card">
+                    <div class="table-toolbar-row">
+                        <input type="text" class="table-search-input" id="search-resources" onkeyup="filterTable('tbl-resources', this.value)" placeholder="Search resources...">
+                    </div>
+                    <table class="enterprise-data-table" id="tbl-resources">
+                        <thead>
+                        <tr>
+                            <th>Resource Title</th>
+                            <th>Category</th>
+                            <th>Capacity Specs</th>
+                            <th>Status</th>
+                            <th>Technical Description</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tbody-resources"><tr><td colspan="6">Loading resources from MySQL...</td></tr></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- VIEW 7: RESOURCE REQUESTS -->
+            <section id="view-requests" class="view-panel" style="display: none;">
+                <div class="content-header-row">
+                    <div class="view-heading">
+                        <h2>Resource Allocation & Reservation Requests</h2>
+                        <p>Manage hardware requests, submit booking time slots, and issue administrative approvals.</p>
+                    </div>
+                    <button class="btn-action-primary" onclick="openModal('request-modal')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        Submit Request
+                    </button>
+                </div>
+
+                <div class="data-panel-card">
+                    <table class="enterprise-data-table" id="tbl-requests">
+                        <thead>
+                        <tr>
+                            <th>Request ID</th>
+                            <th>Requested Node</th>
+                            <th>Requester</th>
+                            <th>Purpose / Justification</th>
+                            <th>Time Window</th>
+                            <th>Status</th>
+                            <th>Review / Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tbody-requests"><tr><td colspan="7">Loading requests...</td></tr></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- VIEW 8: REPORTS & ANALYTICS -->
+            <section id="view-reports" class="view-panel" style="display: none;">
+                <div class="content-header-row">
+                    <div class="view-heading">
+                        <h2>Reports & Institutional Analytics</h2>
+                        <p>Comprehensive training metrics, facility utilization logs, and equipment allocation summaries.</p>
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn-secondary" onclick="exportAllToExcel()">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                            Export Everything to Excel (.csv)
+                        </button>
+                        <button class="btn-action-primary" onclick="downloadInstitutionalReportPdf()">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                            Download Institutional PDF Report
+                        </button>
+                    </div>
+                </div>
+
+                <div class="charts-split-grid">
+                    <div class="chart-card-panel">
+                        <div class="panel-header-title">
+                            <span>Training Completion & Cohort Analytics</span>
+                        </div>
+                        <div id="report-training-container">Loading training analytics...</div>
+                    </div>
+                    <div class="chart-card-panel">
+                        <div class="panel-header-title">
+                            <span>Lab Facility Hours Breakdown</span>
+                        </div>
+                        <div id="report-labs-container">Loading lab analytics...</div>
+                    </div>
+                </div>
+
+                <div class="data-panel-card">
+                    <div class="panel-header-title">
+                        <span>Hardware Asset Allocation & Health Audit</span>
+                    </div>
+                    <div id="report-resources-container">Loading hardware telemetry report...</div>
+                </div>
+            </section>
+
+            <!-- VIEW 9: PROFILE & ROLES -->
+            <section id="view-profile" class="view-panel" style="display: none;">
+                <div class="content-header-row">
+                    <div class="view-heading">
+                        <h2>Role-Based Access Control (RBAC) & Profile</h2>
+                        <p>Authenticated identity, assigned security privileges, and session metadata.</p>
+                    </div>
+                </div>
+
+                <div class="data-panel-card" style="max-width: 650px;">
+                    <div style="display:flex; gap:20px; align-items:center; margin-bottom:24px;">
+                        <div class="avatar-bubble" style="width:64px; height:64px; font-size:24px;" id="profile-avatar-large">AD</div>
+                        <div>
+                            <h3 id="profile-full-name" style="font-size:18px;">Administrator</h3>
+                            <p id="profile-email" style="color:var(--text-secondary); font-size:13px;">admin@corplab.com</p>
+                            <span class="status-badge status-available" id="profile-badge-role" style="margin-top:6px;">ADMIN</span>
+                        </div>
+                    </div>
+
+                    <div style="border-top:1px solid var(--border-color); padding-top:18px; display:grid; grid-template-columns:1fr 1fr; gap:16px; font-size:13px;">
+                        <div>
+                            <span style="color:var(--text-muted); display:block;">Assigned Department</span>
+                            <strong id="profile-dept">IT Infrastructure</strong>
+                        </div>
+                        <div>
+                            <span style="color:var(--text-muted); display:block;">Contact Extension</span>
+                            <strong id="profile-phone">+1-555-0101</strong>
+                        </div>
+                        <div>
+                            <span style="color:var(--text-muted); display:block;">Authorization Level</span>
+                            <strong style="color:var(--accent-cyan);">Full System Superuser</strong>
+                        </div>
+                        <div>
+                            <span style="color:var(--text-muted); display:block;">Authentication Mode</span>
+                            <strong>Spring Security Session Cookie</strong>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW 10: ACTIVITY LOGS -->
+            <section id="view-logs" class="view-panel" style="display: none;">
+                <div class="content-header-row">
+                    <div class="view-heading">
+                        <h2>System Audit Logs & Record History</h2>
+                        <p>Chronological security audit trail recording logins, curriculum edits, and resource allocations.</p>
+                    </div>
+                    <button class="btn-secondary" onclick="loadActivityLogs()">Refresh Logs</button>
+                </div>
+
+                <div class="data-panel-card">
+                    <table class="enterprise-data-table" id="tbl-logs">
+                        <thead>
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>Actor / Operator</th>
+                            <th>Action Type</th>
+                            <th>Operation Details</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tbody-logs"><tr><td colspan="4">Loading audit logs...</td></tr></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- VIEW 11: STUDENT / TRAINEE LEARNING HUB -->
+            <section id="view-student" class="view-panel" style="display: none;">
+                <div class="content-header-row">
+                    <div class="view-heading">
+                        <h2>Trainee & Student Learning Portal</h2>
+                        <p>Access assigned curricula, download comprehensive syllabi, and reserve lab infrastructure nodes.</p>
+                    </div>
+                    <button class="btn-action-primary" onclick="openModal('request-modal')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        Request Lab Hardware Rig
+                    </button>
+                </div>
+
+                <!-- Student Quick Metrics -->
+                <div class="stats-grid-8" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 24px;">
+                    <div class="stat-metric-card">
+                        <div class="stat-card-header">
+                            <span>Enrolled Courses</span>
+                            <div class="stat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon></svg></div>
+                        </div>
+                        <div class="stat-value" id="student-stat-courses">4 Active</div>
+                        <div class="stat-label">Enterprise Tracks</div>
+                    </div>
+                    <div class="stat-metric-card">
+                        <div class="stat-card-header">
+                            <span>Lab Rig Bookings</span>
+                            <div class="stat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect></svg></div>
+                        </div>
+                        <div class="stat-value" id="student-stat-labs">2 Approved</div>
+                        <div class="stat-label">Active Hardware Slots</div>
+                    </div>
+                    <div class="stat-metric-card">
+                        <div class="stat-card-header">
+                            <span>Hands-On Lab Hours</span>
+                            <div class="stat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div>
+                        </div>
+                        <div class="stat-value">42.5 hrs</div>
+                        <div class="stat-label">Lab Telemetry Time</div>
+                    </div>
+                    <div class="stat-metric-card">
+                        <div class="stat-card-header">
+                            <span>Attendance & Score</span>
+                            <div class="stat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></div>
+                        </div>
+                        <div class="stat-value" style="color: var(--success);">98.4%</div>
+                        <div class="stat-label">Excellence Benchmark</div>
+                    </div>
+                </div>
+
+                <!-- Student Active Courses Grid -->
+                <div class="data-panel-card" style="margin-bottom: 24px;">
+                    <div class="panel-header-title">
+                        <span>My Enrolled Programs & Syllabi</span>
+                        <span style="font-size: 12px; color: var(--text-muted);">Curricula synchronized with Faculty updates</span>
+                    </div>
+                    <div class="cards-grid" id="student-courses-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; margin-top: 14px;">
+                        <!-- Injected by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Student Hardware Reservations Table -->
+                <div class="data-panel-card">
+                    <div class="panel-header-title">
+                        <span>My Allocated Lab Hardware Nodes</span>
+                        <button class="btn-secondary" onclick="loadStudentView()">Refresh Slots</button>
+                    </div>
+                    <table class="enterprise-data-table" id="tbl-student-reservations">
+                        <thead>
+                        <tr>
+                            <th>Hardware Node</th>
+                            <th>Reserved Date</th>
+                            <th>Time Window</th>
+                            <th>Purpose / Workload</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tbody-student-reservations">
+                            <!-- Injected by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- VIEW 12: TEACHER / TRAINER FACULTY CONSOLE -->
+            <section id="view-teacher" class="view-panel" style="display: none;">
+                <div class="content-header-row">
+                    <div class="view-heading">
+                        <h2>Faculty & Trainer Management Console</h2>
+                        <p>Curriculum design, dynamic cohort syllabus updates, and trainee lab performance grading.</p>
+                    </div>
+                    <button class="btn-action-primary" onclick="openModal('syllabus-modal')">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        Update Syllabus / Add Module
+                    </button>
+                </div>
+
+                <!-- Trainer Quick Metrics -->
+                <div class="stats-grid-8" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 24px;">
+                    <div class="stat-metric-card">
+                        <div class="stat-card-header">
+                            <span>Assigned Cohorts</span>
+                            <div class="stat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg></div>
+                        </div>
+                        <div class="stat-value">3 Cohorts</div>
+                        <div class="stat-label">Active Teaching Batches</div>
+                    </div>
+                    <div class="stat-metric-card">
+                        <div class="stat-card-header">
+                            <span>Active Trainees</span>
+                            <div class="stat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg></div>
+                        </div>
+                        <div class="stat-value">85 Trainees</div>
+                        <div class="stat-label">Across All Batches</div>
+                    </div>
+                    <div class="stat-metric-card">
+                        <div class="stat-card-header">
+                            <span>Lab Hours Supervised</span>
+                            <div class="stat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg></div>
+                        </div>
+                        <div class="stat-value">128 hrs</div>
+                        <div class="stat-label">Hands-on Supervision</div>
+                    </div>
+                    <div class="stat-metric-card">
+                        <div class="stat-card-header">
+                            <span>Syllabus Compliance</span>
+                            <div class="stat-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></div>
+                        </div>
+                        <div class="stat-value" style="color: var(--accent-cyan);">100% Verified</div>
+                        <div class="stat-label">Industry Standards</div>
+                    </div>
+                </div>
+
+                <!-- Cohort Syllabus Control Table -->
+                <div class="data-panel-card" style="margin-bottom: 24px;">
+                    <div class="panel-header-title">
+                        <span>Assigned Cohorts & Active Syllabus Modules</span>
+                        <span style="font-size: 12px; color: var(--text-muted);">Changes instantly notify the Company Operations Center</span>
+                    </div>
+                    <table class="enterprise-data-table" id="tbl-teacher-cohorts">
+                        <thead>
+                        <tr>
+                            <th>Program Code</th>
+                            <th>Course Title</th>
+                            <th>Category</th>
+                            <th>Active Module</th>
+                            <th>Enrolled</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tbody-teacher-cohorts">
+                            <!-- Injected by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Trainee Evaluation Roster -->
+                <div class="data-panel-card">
+                    <div class="panel-header-title">
+                        <span>Trainee Roster & Lab Participation Benchmark</span>
+                        <button class="btn-secondary" onclick="loadTeacherView()">Refresh Roster</button>
+                    </div>
+                    <table class="enterprise-data-table" id="tbl-teacher-students">
+                        <thead>
+                        <tr>
+                            <th>Trainee Name</th>
+                            <th>Assigned Program</th>
+                            <th>Attendance</th>
+                            <th>Lab Milestone</th>
+                            <th>Performance Grade</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tbody-teacher-students">
+                            <!-- Injected by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+</div>
+
+<!-- ====================================================================
+     DYNAMIC MODALS (CREATE & EDIT)
+     ==================================================================== -->
+
+<!-- Modal: Employee -->
+<div id="employee-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3>Add New Corporate Employee</h3>
+            <button class="modal-close" onclick="closeModal('employee-modal')">&times;</button>
+        </div>
+        <form onsubmit="handleSaveEmployee(event)">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="emp-name" class="form-control" required placeholder="e.g. Rachel Adams">
+                </div>
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="emp-username" class="form-control" required placeholder="e.g. rachel.a">
+                </div>
+                <div class="form-group">
+                    <label>Corporate Email</label>
+                    <input type="email" id="emp-email" class="form-control" required placeholder="rachel.a@corplab.com">
+                </div>
+                <div class="form-group">
+                    <label>Department</label>
+                    <select id="emp-dept" class="form-control">
+                        <option value="Engineering">Engineering</option>
+                        <option value="Cloud & DevOps">Cloud & DevOps</option>
+                        <option value="Data Science & AI">Data Science & AI</option>
+                        <option value="Cybersecurity">Cybersecurity</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Phone / Extension</label>
+                    <input type="text" id="emp-phone" class="form-control" placeholder="+1-555-0199">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="closeModal('employee-modal')">Cancel</button>
+                <button type="submit" class="btn-submit-primary" style="width: auto;">Save Employee</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal: Trainer -->
+<div id="trainer-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3>Register Certified Trainer</h3>
+            <button class="modal-close" onclick="closeModal('trainer-modal')">&times;</button>
+        </div>
+        <form onsubmit="handleSaveTrainer(event)">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Instructor Full Name</label>
+                    <input type="text" id="trn-name" class="form-control" required placeholder="e.g. Alex Morgan">
+                </div>
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="trn-username" class="form-control" required placeholder="e.g. alex.m">
+                </div>
+                <div class="form-group">
+                    <label>Corporate Email</label>
+                    <input type="email" id="trn-email" class="form-control" required placeholder="alex.m@corplab.com">
+                </div>
+                <div class="form-group">
+                    <label>Domain Specialization</label>
+                    <select id="trn-dept" class="form-control">
+                        <option value="Cloud & DevOps">Cloud & DevOps</option>
+                        <option value="Data Science & AI">Data Science & AI</option>
+                        <option value="Cybersecurity">Cybersecurity</option>
+                        <option value="Software Engineering">Software Engineering</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="text" id="trn-phone" class="form-control" placeholder="+1-555-0188">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="closeModal('trainer-modal')">Cancel</button>
+                <button type="submit" class="btn-submit-primary" style="width: auto;">Save Trainer</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal: Training Program -->
+<div id="program-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3>Create Training Program</h3>
+            <button class="modal-close" onclick="closeModal('program-modal')">&times;</button>
+        </div>
+        <form onsubmit="handleSaveProgram(event)">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Program Code</label>
+                    <input type="text" id="prog-code" class="form-control" required placeholder="e.g. SEC-501">
+                </div>
+                <div class="form-group">
+                    <label>Course Title</label>
+                    <input type="text" id="prog-title" class="form-control" required placeholder="e.g. Kubernetes Security & eBPF Telemetry">
+                </div>
+                <div class="form-group">
+                    <label>Domain Category</label>
+                    <select id="prog-category" class="form-control">
+                        <option value="Cloud Infrastructure">Cloud Infrastructure</option>
+                        <option value="Artificial Intelligence">Artificial Intelligence</option>
+                        <option value="Cybersecurity">Cybersecurity</option>
+                        <option value="Software Engineering">Software Engineering</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Lead Instructor</label>
+                    <input type="text" id="prog-trainer" class="form-control" placeholder="e.g. David Kumar">
+                </div>
+                <div class="form-group">
+                    <label>Duration</label>
+                    <input type="text" id="prog-duration" class="form-control" placeholder="e.g. 4 Weeks">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="closeModal('program-modal')">Cancel</button>
+                <button type="submit" class="btn-submit-primary" style="width: auto;">Publish Program</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal: Lab -->
+<div id="lab-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3>Add Laboratory Venue</h3>
+            <button class="modal-close" onclick="closeModal('lab-modal')">&times;</button>
+        </div>
+        <form onsubmit="handleSaveLab(event)">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Laboratory Name</label>
+                    <input type="text" id="lab-name" class="form-control" required placeholder="e.g. Quantum Computing Lab">
+                </div>
+                <div class="form-group">
+                    <label>Physical Location</label>
+                    <input type="text" id="lab-loc" class="form-control" required placeholder="e.g. Tech Park 4, Room 201">
+                </div>
+                <div class="form-group">
+                    <label>Seating Capacity</label>
+                    <input type="number" id="lab-cap" class="form-control" required min="5" value="30">
+                </div>
+                <div class="form-group">
+                    <label>Facility Description</label>
+                    <textarea id="lab-desc" class="form-control" rows="2" placeholder="Hardware specs and air conditioning notes"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="closeModal('lab-modal')">Cancel</button>
+                <button type="submit" class="btn-submit-primary" style="width: auto;">Create Lab</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal: Resource -->
+<div id="resource-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3 id="res-modal-heading">Add Compute Resource</h3>
+            <button class="modal-close" onclick="closeModal('resource-modal')">&times;</button>
+        </div>
+        <form onsubmit="handleSaveResource(event)">
+            <input type="hidden" id="edit-res-id">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Asset Title / Node Name</label>
+                    <input type="text" id="res-title" class="form-control" required placeholder="e.g. GPU Rig RTX 4090">
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="res-category" class="form-control">
+                        <option value="Cloud Infrastructure">Cloud Infrastructure</option>
+                        <option value="AI / GPU Compute">AI / GPU Compute</option>
+                        <option value="Database Systems">Database Systems</option>
+                        <option value="DevOps & CI/CD">DevOps & CI/CD</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Capacity (GB RAM or vCPUs)</label>
+                    <input type="number" id="res-capacity" class="form-control" required min="1" placeholder="e.g. 64">
+                </div>
+                <div class="form-group">
+                    <label>Operational Status</label>
+                    <select id="res-status" class="form-control">
+                        <option value="AVAILABLE">AVAILABLE</option>
+                        <option value="RESERVED">RESERVED</option>
+                        <option value="MAINTENANCE">MAINTENANCE</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Technical Description</label>
+                    <textarea id="res-desc" class="form-control" rows="2" placeholder="OS details, IP address, drivers"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="closeModal('resource-modal')">Cancel</button>
+                <button type="submit" class="btn-submit-primary" style="width: auto;" id="btn-save-res-text">Save Resource</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal: Resource Request -->
+<div id="request-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3>Submit Resource Booking Request</h3>
+            <button class="modal-close" onclick="closeModal('request-modal')">&times;</button>
+        </div>
+        <form onsubmit="handleSaveRequest(event)">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Target Node / Resource</label>
+                    <select id="req-res-name" class="form-control" required>
+                        <option value="NVIDIA RTX 4090 Deep Learning Rig">NVIDIA RTX 4090 Deep Learning Rig (AI Lab)</option>
+                        <option value="Kubernetes Master Node 01">Kubernetes Master Node 01 (Cloud Lab A)</option>
+                        <option value="PostgreSQL HA DB Node">PostgreSQL HA DB Node (Dev Lab B)</option>
+                        <option value="DevOps CI/CD Build Runner">DevOps CI/CD Build Runner (Cloud Lab A)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Booking Date</label>
+                    <input type="date" id="req-date" class="form-control" required value="2026-11-20">
+                </div>
+                <div class="form-group">
+                    <label>Time Slot</label>
+                    <select id="req-slot" class="form-control">
+                        <option value="09:00 - 12:00">Morning Session (09:00 - 12:00)</option>
+                        <option value="14:00 - 17:00">Afternoon Session (14:00 - 17:00)</option>
+                        <option value="18:00 - 21:00">Evening Lab Slot (18:00 - 21:00)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Purpose / Project Justification</label>
+                    <textarea id="req-purpose" class="form-control" required rows="3" placeholder="Explain the workload, model training, or simulation testing"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="closeModal('request-modal')">Cancel</button>
+                <button type="submit" class="btn-submit-primary" style="width: auto;">Submit Booking</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal: Teacher Syllabus Update -->
+<div id="syllabus-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-card" style="max-width: 520px;">
+        <div class="modal-header">
+            <h3>Update Course Syllabus / Add Module</h3>
+            <button class="modal-close" onclick="closeModal('syllabus-modal')">&times;</button>
+        </div>
+        <form onsubmit="handleSaveSyllabus(event)">
+            <div class="modal-body">
+                <p class="modal-desc" style="color: var(--accent-cyan); font-size: 12px; margin-bottom: 12px;">
+                    Publishing updates will automatically notify the Company Operations Center and update student enrolled views in real time.
+                </p>
+                <div class="form-group">
+                    <label>Target Cohort / Training Track</label>
+                    <select id="syl-prog-code" class="form-control" required>
+                        <option value="DEV-201">DEV-201: Cloud Infrastructure & Kubernetes Administration</option>
+                        <option value="FSJ-101">FSJ-101: Enterprise Java Full Stack with Spring Boot</option>
+                        <option value="AI-301">AI-301: Deep Learning & Neural Networks Acceleration</option>
+                        <option value="SEC-401">SEC-401: Enterprise Zero Trust & Cyber Defense</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>New Module Number & Title</label>
+                    <input type="text" id="syl-module-title" class="form-control" required placeholder="e.g. Module 5: Microservice Resiliency & Spring Cloud Gateway">
+                </div>
+                <div class="form-group">
+                    <label>Estimated Module Duration</label>
+                    <input type="text" id="syl-duration" class="form-control" required value="12 Hours (4 Lectures + 2 Labs)">
+                </div>
+                <div class="form-group">
+                    <label>Mandatory Hands-On Lab Exercise</label>
+                    <input type="text" id="syl-lab" class="form-control" required placeholder="e.g. Deploy 3-tier Spring Boot app to Cloud Lab A Kubernetes Cluster">
+                </div>
+                <div class="form-group">
+                    <label>Curriculum Topics & Key Learning Objectives</label>
+                    <textarea id="syl-desc" class="form-control" rows="3" required placeholder="Outline core topics: Circuit Breaker patterns, Resilience4j, Prometheus metrics, distributed tracing..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" onclick="closeModal('syllabus-modal')">Cancel</button>
+                <button type="submit" class="btn-submit-primary" style="width: auto;">Publish Syllabus to Platform</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal: Syllabus Viewer / PDF Export Preview -->
+<div id="syllabus-viewer-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-card" style="max-width: 600px;">
+        <div class="modal-header">
+            <h3 id="viewer-course-title">Course Syllabus Specification</h3>
+            <button class="modal-close" onclick="closeModal('syllabus-viewer-modal')">&times;</button>
+        </div>
+        <div class="modal-body" id="viewer-syllabus-content">
+            <!-- Populated by JS -->
+        </div>
+        <div class="modal-footer" style="justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+            <button class="btn-secondary" onclick="closeModal('syllabus-viewer-modal')">Close</button>
+            <div style="display:flex; gap:10px;">
+                <button class="btn-secondary" onclick="exportCurrentSyllabusToExcel()">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                    Export to Excel (.csv)
+                </button>
+                <button class="btn-action-primary" onclick="downloadCurrentSyllabusPdf()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    Download Official PDF Syllabus
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Global Real-Time Toast Notification Container -->
+<div class="toast-container" id="toast-container"></div>
+
+<script src="js/dashboard.js"></script>
+</body>
+</html>

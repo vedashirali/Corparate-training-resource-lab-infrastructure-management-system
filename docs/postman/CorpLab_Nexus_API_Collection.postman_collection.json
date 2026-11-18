@@ -1,0 +1,495 @@
+{
+  "info": {
+    "_postman_id": "c01b1a20-8a5a-4c3c-9544-2f6c27a03386",
+    "name": "CorpLab Nexus Enterprise REST API",
+    "description": "Comprehensive Postman API Collection for Corporate Training Resource & Lab Infrastructure Management System (Spring Boot 3 + MySQL).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Authentication Module",
+      "item": [
+        {
+          "name": "1.1 Login (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usernameOrEmail\": \"admin\",\n  \"password\": \"Admin@123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "Authenticates user and issues HTTP session cookie (JSESSIONID)."
+          }
+        },
+        {
+          "name": "1.2 Get Current Profile (GET Profile)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "profile"]
+            },
+            "description": "Retrieves the currently authenticated user session profile and role."
+          }
+        },
+        {
+          "name": "1.3 Register New Account",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"sarah.connor\",\n  \"email\": \"sarah.c@corplab.com\",\n  \"role\": \"EMPLOYEE\",\n  \"password\": \"Secret@123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            },
+            "description": "Creates a new user with BCrypt password hashing."
+          }
+        },
+        {
+          "name": "1.4 Forgot Password Recovery",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"admin\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/forgot-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "forgot-password"]
+            },
+            "description": "Simulates password recovery and returns temporary security reset token."
+          }
+        },
+        {
+          "name": "1.5 Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "logout"]
+            },
+            "description": "Terminates server session and invalidates JSESSIONID cookie."
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Dashboard & Statistics",
+      "item": [
+        {
+          "name": "2.1 GET Dashboard Overview",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/dashboard/overview",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "dashboard", "overview"]
+            },
+            "description": "Returns real-time aggregate counts for Employees, Trainers, Programs, Available Labs, Resources, and Pending Requests."
+          }
+        },
+        {
+          "name": "2.2 GET Dashboard Statistics (Charts Data)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/dashboard/statistics",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "dashboard", "statistics"]
+            },
+            "description": "Returns chart datasets for monthly cohort enrollments and facility utilization percentages."
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Employee Management",
+      "item": [
+        {
+          "name": "3.1 GET All Employees",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/employees",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "employees"]
+            },
+            "description": "Retrieves all corporate trainees and employee profiles."
+          }
+        },
+        {
+          "name": "3.2 POST Create New Employee",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Karan Johar\",\n  \"username\": \"karan.j\",\n  \"email\": \"karan.j@corplab.com\",\n  \"department\": \"Cloud & DevOps\",\n  \"phone\": \"+1-555-0145\",\n  \"password\": \"Employee@123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/employees",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "employees"]
+            },
+            "description": "Adds a new employee record directly to MySQL."
+          }
+        },
+        {
+          "name": "3.3 GET Employee By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/employees/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "employees", "1"]
+            },
+            "description": "Fetches profile for a specific employee ID."
+          }
+        },
+        {
+          "name": "3.4 DELETE Employee",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/employees/99",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "employees", "99"]
+            },
+            "description": "Deletes employee record by ID."
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Trainer Management",
+      "item": [
+        {
+          "name": "4.1 GET All Trainers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/trainers",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "trainers"]
+            },
+            "description": "Retrieves the roster of certified enterprise trainers and domain faculty."
+          }
+        },
+        {
+          "name": "4.2 POST Create New Trainer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Dr. Aris Thorne\",\n  \"username\": \"aris.t\",\n  \"email\": \"aris.thorne@corplab.com\",\n  \"department\": \"Data Science & AI\",\n  \"phone\": \"+1-555-0189\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/trainers",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "trainers"]
+            },
+            "description": "Registers a new instructor with specialization."
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Training Program Management",
+      "item": [
+        {
+          "name": "5.1 GET All Training Programs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/training-programs",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "training-programs"]
+            },
+            "description": "Lists all curriculum tracks, lead trainers, and enrolled learner counts."
+          }
+        },
+        {
+          "name": "5.2 POST Create Training Program",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"programCode\": \"K8S-502\",\n  \"title\": \"Advanced Kubernetes Networking & Istio Service Mesh\",\n  \"category\": \"Cloud Infrastructure\",\n  \"description\": \"Comprehensive hands-on curriculum covering Envoy sidecars, mutual TLS, and traffic routing.\",\n  \"trainerName\": \"David Kumar\",\n  \"duration\": \"5 Weeks\",\n  \"startDate\": \"2026-12-01\",\n  \"endDate\": \"2027-01-05\",\n  \"enrolledCount\": 18,\n  \"status\": \"OPEN\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/training-programs",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "training-programs"]
+            },
+            "description": "Publishes a new training program to the corporate catalog."
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Lab Infrastructure Management",
+      "item": [
+        {
+          "name": "6.1 GET All Labs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/labs",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "labs"]
+            },
+            "description": "Retrieves computer laboratories, venue locations, and workstation capacities."
+          }
+        },
+        {
+          "name": "6.2 POST Create Laboratory",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"labName\": \"Cyber Warfare Simulation Lab\",\n  \"location\": \"Security Operations Wing, Floor 2, Room 204\",\n  \"capacity\": 25,\n  \"description\": \"Isolated air-gapped laboratory with hardware firewalls and threat simulation consoles.\",\n  \"status\": \"ACTIVE\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/labs",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "labs"]
+            },
+            "description": "Registers a new lab venue in the infrastructure inventory."
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Resource Management",
+      "item": [
+        {
+          "name": "7.1 GET All Compute Resources",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/resources",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "resources"]
+            },
+            "description": "Fetches active compute nodes, GPU clusters, and server hardware."
+          }
+        },
+        {
+          "name": "7.2 POST Create Compute Resource",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"NVIDIA DGX H100 AI Cluster\",\n  \"category\": \"AI / GPU Compute\",\n  \"capacity\": 512,\n  \"status\": \"AVAILABLE\",\n  \"description\": \"Enterprise 8x H100 GPU compute node with 640GB aggregate VRAM\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/resources",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "resources"]
+            },
+            "description": "Allocates a new compute node asset."
+          }
+        }
+      ]
+    },
+    {
+      "name": "8. Resource Request Management",
+      "item": [
+        {
+          "name": "8.1 GET All Resource Requests",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/resource-requests",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "resource-requests"]
+            },
+            "description": "Lists all hardware reservation and booking requests."
+          }
+        },
+        {
+          "name": "8.2 POST Submit Resource Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resourceName\": \"NVIDIA RTX 4090 Deep Learning Rig\",\n  \"bookingDate\": \"2026-11-25\",\n  \"timeSlot\": \"14:00 - 17:00\",\n  \"purpose\": \"Large Language Model inference benchmark testing\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/resource-requests",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "resource-requests"]
+            },
+            "description": "Submits a new hardware reservation request."
+          }
+        },
+        {
+          "name": "8.3 PUT Approve or Reject Request",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"APPROVED\",\n  \"adminRemarks\": \"Approved by Lab Administrator for AI benchmark cohort\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/resource-requests/1/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "resource-requests", "1", "status"]
+            },
+            "description": "Updates booking status (APPROVED / REJECTED)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "9. Reports & Analytics",
+      "item": [
+        {
+          "name": "9.1 GET Training Completion Report",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/reports/training",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reports", "training"]
+            },
+            "description": "Returns completion metrics, active cohort pass rates, and category statistics."
+          }
+        },
+        {
+          "name": "9.2 GET Lab Facilities Report",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/reports/labs",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reports", "labs"]
+            },
+            "description": "Returns facility utilization rates, peak hours, and allocated lab hours."
+          }
+        },
+        {
+          "name": "9.3 GET Compute Resources Report",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/reports/resources",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reports", "resources"]
+            },
+            "description": "Returns hardware inventory counts, health audits, and request approval rates."
+          }
+        }
+      ]
+    },
+    {
+      "name": "10. System Audit Logs",
+      "item": [
+        {
+          "name": "10.1 GET System Audit Logs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/settings/logs",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "settings", "logs"]
+            },
+            "description": "Chronological audit trail of all security operations, logins, and database modifications."
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    }
+  ]
+}

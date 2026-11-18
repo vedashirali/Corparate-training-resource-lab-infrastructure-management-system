@@ -1,0 +1,286 @@
+{
+  "info": {
+    "_postman_id": "c1f7b8e2-45a9-4d2b-98f1-corplab001",
+    "name": "CorpLab Nexus - Enterprise REST API Collection",
+    "description": "Production-grade REST API testing suite for CorpLab Nexus (Spring Boot 3.2.5 + MySQL 8 + Spring Security).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Authentication (Spring Security & RBAC)",
+      "item": [
+        {
+          "name": "POST Login (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usernameOrEmail\": \"admin\",\n  \"password\": \"Admin@123\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8088/api/auth/login",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8088",
+              "path": ["api", "auth", "login"]
+            },
+            "description": "Authenticates user against MySQL 'users' table using BCrypt password hashing. Issues HTTP-only JSESSIONID."
+          }
+        },
+        {
+          "name": "POST Register (New Employee / Trainee)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"sneha.sharma\",\n  \"email\": \"sneha.s@corplab.com\",\n  \"password\": \"Secret@123\",\n  \"role\": \"EMPLOYEE\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8088/api/auth/register",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8088",
+              "path": ["api", "auth", "register"]
+            },
+            "description": "Inserts a new user record into MySQL and creates an audit log entry via ActivityLogRepository."
+          }
+        },
+        {
+          "name": "GET Current Profile (/me)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8088/api/auth/profile",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8088",
+              "path": ["api", "auth", "profile"]
+            },
+            "description": "Retrieves the currently authenticated user's profile from the HTTP Session."
+          }
+        },
+        {
+          "name": "POST Logout",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "http://localhost:8088/api/auth/logout",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8088",
+              "path": ["api", "auth", "logout"]
+            },
+            "description": "Invalidates the active HTTP session."
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Dashboard & KPIs",
+      "item": [
+        {
+          "name": "GET Overview KPIs",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8088/api/dashboard/overview",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8088",
+              "path": ["api", "dashboard", "overview"]
+            },
+            "description": "Aggregates total active counts for trainees, trainers, courses, labs, compute resources, and pending requests."
+          }
+        },
+        {
+          "name": "GET Workstation Statistics",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8088/api/dashboard/statistics",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8088",
+              "path": ["api", "dashboard", "statistics"]
+            },
+            "description": "Returns hardware capacity metrics and cluster load telemetry."
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Training Programs (Curricula)",
+      "item": [
+        {
+          "name": "GET All Programs",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8088/api/training-programs",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8088",
+              "path": ["api", "training-programs"]
+            },
+            "description": "Fetches the 4 enterprise courses (DEV-201, FSJ-101, AI-301, SEC-401) from MySQL via TrainingProgramRepository."
+          }
+        },
+        {
+          "name": "POST Create New Program",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"programCode\": \"GENAI-501\",\n  \"title\": \"Enterprise Generative AI & LLM Fine-Tuning\",\n  \"category\": \"Artificial Intelligence\",\n  \"trainerName\": \"Elena Rostova\",\n  \"duration\": \"6 Weeks\",\n  \"status\": \"OPEN\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8088/api/training-programs",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8088",
+              "path": ["api", "training-programs"]
+            },
+            "description": "Inserts a new curriculum record into MySQL."
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Lab Facilities & Compute Resources",
+      "item": [
+        {
+          "name": "GET All Labs",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8088/api/labs",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8088",
+              "path": ["api", "labs"]
+            },
+            "description": "Retrieves Cloud Lab A, AI Research Lab, and Dev Lab B."
+          }
+        },
+        {
+          "name": "GET All Compute Resources",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8088/api/resources",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8088",
+              "path": ["api", "resources"]
+            },
+            "description": "Retrieves GPU rigs, Kubernetes master nodes, and DB clusters."
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Lab Booking Requests Workflow",
+      "item": [
+        {
+          "name": "GET All Booking Requests",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8088/api/resource-requests",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8088",
+              "path": ["api", "resource-requests"]
+            },
+            "description": "Returns current reservation requests submitted by students."
+          }
+        },
+        {
+          "name": "POST Submit Booking Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resourceName\": \"NVIDIA RTX 4090 Deep Learning Rig\",\n  \"requesterName\": \"Rahul Sharma\",\n  \"purpose\": \"Spring Boot + Deep Learning Microservice Integration\",\n  \"requestDate\": \"2026-11-25\",\n  \"timeSlot\": \"14:00 - 17:00\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8088/api/resource-requests",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8088",
+              "path": ["api", "resource-requests"]
+            },
+            "description": "Creates a new PENDING reservation."
+          }
+        },
+        {
+          "name": "PUT Update Request Status (Approve/Reject)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"APPROVED\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8088/api/resource-requests/1/status",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8088",
+              "path": ["api", "resource-requests", "1", "status"]
+            },
+            "description": "Administrator workflow action approving a student reservation."
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Activity Audit Logs",
+      "item": [
+        {
+          "name": "GET Chronological Audit Trail",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8088/api/settings/logs",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8088",
+              "path": ["api", "settings", "logs"]
+            },
+            "description": "Fetches append-only governance logs from MySQL 'activity_logs' table."
+          }
+        }
+      ]
+    }
+  ]
+}

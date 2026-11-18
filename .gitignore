@@ -1,0 +1,74 @@
+# ====================================================================
+# CorpLab Nexus | Enterprise Platform Git Ignore Configuration
+# ====================================================================
+
+# Compiled Java Class Files
+*.class
+*.log
+*.ctxt
+
+# Maven Build Target Directories
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# IntelliJ IDEA Project Files
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+.idea_modules/
+
+# Eclipse IDE
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# Operating System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Package & Archive Formats
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Log files & Terminal dumps
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Database & Environment Backups
+*.bak
+*.swp
+*.sql.backup
+.env
+.env.local
